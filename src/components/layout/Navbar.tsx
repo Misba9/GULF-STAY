@@ -3,11 +3,15 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { NAV_LINKS } from '../../config/site';
+import { Logo } from '../Logo';
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+
+  const isHome = location.pathname === '/';
+  const isSolid = isScrolled || !isHome;
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -19,44 +23,49 @@ export function Navbar() {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
-  const navClass = ({ isActive }: { isActive: boolean }) =>
-    `text-sm uppercase tracking-widest transition-colors ${isActive ? 'text-gold' : 'hover:text-gold'}`;
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
+
+  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+    `site-nav-link${isActive ? ' site-nav-link--active' : ''}`;
 
   return (
-    <nav
-      className={`fixed w-full z-50 transition-all duration-500 ${
-        isScrolled || location.pathname !== '/' ? 'py-4 glass' : 'py-8 bg-transparent'
-      }`}
+    <header
+      className={`site-navbar ${isSolid ? 'site-navbar--solid' : 'site-navbar--transparent'}`}
+      role="banner"
     >
-      <div className="container mx-auto px-6 flex justify-between items-center">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="w-10 h-10 border-2 border-gold flex items-center justify-center rotate-45">
-            <span className="text-gold font-serif text-xl -rotate-45 font-bold">G</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-xl font-serif font-bold tracking-widest text-white">GULF STAY</span>
-            <span className="text-[10px] tracking-[0.2em] text-gold uppercase">Vacation Homes</span>
-          </div>
-        </Link>
+      <div className="site-navbar__inner">
+        <div className="site-navbar__brand">
+          <Logo variant="header" />
+        </div>
 
-        <div className="hidden lg:flex items-center gap-8">
-          {NAV_LINKS.map((item) => (
-            <NavLink key={item.path} to={item.path} className={navClass} end={item.path === '/'}>
-              {item.label}
-            </NavLink>
-          ))}
-          <Link to="/book" className="gold-btn text-xs uppercase tracking-widest px-6 py-3">
+        <nav className="site-navbar__menu hidden lg:flex" aria-label="Main navigation">
+          <ul className="site-navbar__links">
+            {NAV_LINKS.map((item) => (
+              <li key={item.path}>
+                <NavLink to={item.path} className={navLinkClass} end={item.path === '/'}>
+                  {item.label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+          <Link to="/book" className="nav-cta-btn">
             Book Now
           </Link>
-        </div>
+        </nav>
 
         <button
           type="button"
-          className="lg:hidden text-gold"
+          className="site-navbar__toggle lg:hidden"
           onClick={() => setIsMobileMenuOpen(true)}
           aria-label="Open menu"
+          aria-expanded={isMobileMenuOpen}
         >
-          <Menu size={32} />
+          <Menu size={28} strokeWidth={1.5} />
         </button>
       </div>
 
@@ -66,34 +75,46 @@ export function Navbar() {
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            className="fixed inset-0 bg-luxury-black z-[60] flex flex-col p-10"
+            transition={{ type: 'tween', duration: 0.35 }}
+            className="site-mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile navigation"
           >
-            <button
-              type="button"
-              className="self-end text-gold mb-10"
-              onClick={() => setIsMobileMenuOpen(false)}
-              aria-label="Close menu"
-            >
-              <X size={40} />
-            </button>
-            <div className="flex flex-col gap-8">
-              {NAV_LINKS.map((item) => (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  className="text-4xl font-serif hover:text-gold"
-                  end={item.path === '/'}
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-              <Link to="/book" className="gold-btn text-center mt-4">
+            <div className="site-mobile-menu__header">
+              <Logo variant="drawer" />
+              <button
+                type="button"
+                className="site-navbar__toggle"
+                onClick={() => setIsMobileMenuOpen(false)}
+                aria-label="Close menu"
+              >
+                <X size={32} strokeWidth={1.5} />
+              </button>
+            </div>
+            <nav className="site-mobile-menu__nav">
+              <ul className="site-mobile-menu__links">
+                {NAV_LINKS.map((item) => (
+                  <li key={item.path}>
+                    <NavLink
+                      to={item.path}
+                      className={({ isActive }) =>
+                        `site-mobile-menu__link${isActive ? ' text-gold' : ''}`
+                      }
+                      end={item.path === '/'}
+                    >
+                      {item.label}
+                    </NavLink>
+                  </li>
+                ))}
+              </ul>
+              <Link to="/book" className="nav-cta-btn nav-cta-btn--block">
                 Book Your Stay
               </Link>
-            </div>
+            </nav>
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </header>
   );
 }

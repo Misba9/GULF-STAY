@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { PropertyCard } from '../components/PropertyCard';
 import { HeroVideoBackground } from '../components/HeroVideoBackground';
+import { HomeAboutSection } from '../components/HomeAboutSection';
 import { PROPERTIES } from '../data/properties';
 
 export function HomePage() {
@@ -57,6 +58,8 @@ export function HomePage() {
           </div>
         </div>
       </section>
+
+      <HomeAboutSection />
 
       <section className="py-24 bg-luxury-black">
         <div className="container mx-auto px-6">

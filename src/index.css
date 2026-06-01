@@ -22,6 +22,306 @@
   @apply relative overflow-hidden bg-gold text-luxury-black font-bold py-4 px-8 rounded-none transition-all duration-500 hover:bg-white hover:scale-105;
 }
 
+/* ——— Site logo (header / footer / drawer) ——— */
+.site-logo-link {
+  @apply inline-flex items-center justify-center shrink-0;
+  @apply transition-all duration-300 ease-in-out;
+  line-height: 0;
+}
+
+/* Navbar: navbar-logo-2.png — no extra wrapper background */
+.site-logo-link--navbar {
+  @apply bg-transparent shadow-none rounded-none;
+  padding: 0;
+}
+
+.site-logo-link--navbar:hover {
+  transform: scale(1.04);
+  filter: drop-shadow(0 2px 14px rgba(212, 175, 55, 0.3));
+}
+
+.site-logo-link--filled {
+  @apply rounded-sm bg-white shadow-sm;
+}
+
+.site-logo-link--filled:hover {
+  transform: scale(1.03);
+}
+
+.site-logo-link:focus-visible {
+  @apply outline outline-2 outline-offset-2 outline-gold;
+}
+
+.site-logo-img {
+  display: block;
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.site-logo-link--header {
+  height: 3.75rem;
+  max-width: 10rem;
+}
+
+@media (min-width: 640px) {
+  .site-logo-link--header {
+    height: 4rem;
+    max-width: 10.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .site-logo-link--header {
+    height: 4.25rem;
+    max-width: 11rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .site-logo-link--header {
+    height: 4.5rem;
+    max-width: 11.5rem;
+  }
+}
+
+.site-logo-link--footer {
+  height: 2.75rem;
+  padding: 0.3125rem 0.625rem;
+  align-self: flex-start;
+}
+
+.site-logo-link--drawer {
+  height: 4rem;
+  max-width: 10.5rem;
+  padding: 0;
+}
+
+.site-logo-link--about {
+  height: auto;
+  width: 100%;
+  max-width: 16rem;
+  padding: 1.25rem 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .site-logo-link--about {
+    max-width: 18rem;
+    padding: 1.5rem 2rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .site-logo-link--about {
+    max-width: 20rem;
+  }
+}
+
+/* ——— Home about section ——— */
+.home-about {
+  @apply py-20 sm:py-24 bg-luxury-gray relative overflow-hidden;
+}
+
+.home-about::before {
+  content: '';
+  @apply absolute inset-0 pointer-events-none;
+  background: radial-gradient(ellipse 80% 60% at 20% 50%, rgba(212, 175, 55, 0.08), transparent 60%);
+}
+
+.home-about__grid {
+  @apply relative grid grid-cols-1 gap-12 items-center;
+  @apply lg:grid-cols-2 lg:gap-16 xl:gap-24;
+}
+
+.home-about__logo-wrap {
+  @apply flex items-center justify-center lg:justify-end;
+}
+
+.home-about__logo-card {
+  @apply flex flex-col items-center justify-center text-center w-full max-w-sm mx-auto lg:max-w-md;
+  @apply glass p-8 sm:p-10 border border-white/10;
+}
+
+.home-about__logo-card .site-logo-link--about {
+  @apply mx-auto shadow-md;
+}
+
+.home-about__tagline {
+  @apply mt-6 text-[10px] sm:text-xs uppercase tracking-[0.25em] text-gold m-0;
+}
+
+.home-about__content {
+  @apply max-w-xl lg:max-w-none;
+}
+
+.home-about__stats {
+  @apply grid grid-cols-2 gap-6 sm:gap-8;
+}
+
+.home-about__stat {
+  @apply border-l-2 border-gold pl-4 sm:pl-6;
+}
+
+/* ——— Navbar ——— */
+.site-navbar {
+  @apply fixed inset-x-0 top-0 z-50;
+  @apply transition-[background-color,backdrop-filter,box-shadow] duration-300;
+}
+
+.site-navbar--transparent {
+  @apply bg-transparent;
+}
+
+.site-navbar--solid {
+  @apply glass shadow-lg shadow-black/20;
+}
+
+.site-navbar__inner {
+  @apply container mx-auto flex items-center justify-between gap-4;
+  @apply px-4 sm:px-6;
+  height: 4.75rem;
+  min-height: 4.75rem;
+}
+
+@media (min-width: 1024px) {
+  .site-navbar__inner {
+    height: 5.25rem;
+    min-height: 5.25rem;
+  }
+}
+
+.site-navbar__brand {
+  @apply flex items-center justify-center shrink-0;
+  height: 100%;
+}
+
+.site-navbar__menu {
+  @apply items-center gap-10 ml-auto;
+}
+
+.site-navbar__links {
+  @apply flex items-center gap-8 list-none m-0 p-0;
+}
+
+.site-nav-link {
+  @apply inline-flex items-center h-10 text-sm uppercase tracking-widest text-white/90;
+  @apply transition-colors duration-300 hover:text-gold;
+  line-height: 1;
+}
+
+.site-nav-link--active {
+  @apply text-gold;
+}
+
+.nav-cta-btn {
+  @apply inline-flex items-center justify-center shrink-0;
+  @apply h-10 px-6 text-xs font-bold uppercase tracking-widest;
+  @apply bg-gold text-luxury-black rounded-none;
+  @apply transition-all duration-300 ease-in-out;
+  line-height: 1;
+}
+
+.nav-cta-btn:hover {
+  @apply bg-white;
+  transform: scale(1.03);
+}
+
+.nav-cta-btn--block {
+  @apply w-full h-12 text-sm mt-2;
+}
+
+.site-navbar__toggle {
+  @apply flex items-center justify-center shrink-0;
+  @apply w-10 h-10 text-gold;
+  @apply transition-colors duration-300 hover:text-white;
+}
+
+/* Mobile menu */
+.site-mobile-menu {
+  @apply fixed inset-0 z-[60] flex flex-col bg-luxury-black;
+  @apply px-6 pt-6 pb-10 sm:px-10;
+}
+
+.site-mobile-menu__header {
+  @apply flex items-center justify-between gap-4;
+  min-height: 3.25rem;
+  margin-bottom: 2.5rem;
+}
+
+.site-mobile-menu__nav {
+  @apply flex flex-col flex-1;
+}
+
+.site-mobile-menu__links {
+  @apply flex flex-col gap-6 list-none m-0 p-0;
+}
+
+.site-mobile-menu__link {
+  @apply block font-serif text-3xl sm:text-4xl text-white transition-colors duration-300 hover:text-gold;
+}
+
+/* ——— Footer ——— */
+.site-footer {
+  @apply bg-luxury-black border-t border-white/5 pt-16 pb-8 sm:pt-20 sm:pb-10;
+}
+
+.site-footer__grid {
+  @apply grid grid-cols-1 gap-12 mb-16;
+  @apply md:grid-cols-2 lg:grid-cols-4 lg:gap-12 lg:mb-20;
+}
+
+.footer-brand {
+  @apply flex flex-col items-start;
+}
+
+.footer-brand__description {
+  @apply text-gray-500 text-sm leading-relaxed max-w-sm;
+  margin-top: 1.25rem;
+  margin-bottom: 0;
+}
+
+.footer-brand__social {
+  @apply flex items-center gap-3;
+  margin-top: 1.5rem;
+}
+
+.footer-social-link {
+  @apply flex items-center justify-center w-10 h-10 glass text-gray-400;
+  @apply transition-colors duration-300 hover:text-gold;
+}
+
+.site-footer__column {
+  @apply flex flex-col;
+}
+
+.site-footer__heading {
+  @apply text-white font-serif text-lg mb-6 sm:mb-8 m-0;
+}
+
+.site-footer__list {
+  @apply space-y-3 sm:space-y-4 text-sm text-gray-500 list-none m-0 p-0;
+}
+
+.site-footer__link {
+  @apply transition-colors duration-300 hover:text-gold;
+}
+
+.site-footer__bar {
+  @apply flex flex-col items-center gap-4 pt-8 border-t border-white/5;
+  @apply sm:flex-row sm:justify-between sm:items-center sm:pt-10;
+}
+
+.site-footer__copyright {
+  @apply text-gray-500 text-xs text-center sm:text-left m-0;
+}
+
+.site-footer__badges {
+  @apply flex flex-wrap justify-center gap-6 sm:gap-8;
+  @apply text-[10px] uppercase tracking-widest text-gray-500;
+}
+
 .outline-btn {
   @apply border border-gold text-gold py-4 px-8 rounded-none transition-all duration-500 hover:bg-gold hover:text-luxury-black;
 }

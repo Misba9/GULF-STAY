@@ -1,6 +1,9 @@
 export const SITE = {
   name: 'Gulf Stay Homes',
   tagline: 'Vacation Homes',
+  logo: '/logo.png',
+  /** Used in header & mobile menu */
+  navbarLogo: '/navbar-logo-2.png',
   phone: '+971562033367',
   phoneDisplay: '+971 562033367',
   email: 'reservation@gulfstayhomes.ae',

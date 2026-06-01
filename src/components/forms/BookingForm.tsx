@@ -75,23 +75,19 @@ export function BookingForm({ initialPropertySlug }: BookingFormProps) {
       .filter(Boolean)
       .join('\n');
 
-    const result = await submitToWeb3Forms(
-      {
-        name,
-        email,
-        phone,
-        subject: `Reservation Request — ${property.title}`,
-        message,
-      },
-      {
-        property: property.title,
-        check_in: checkIn,
-        check_out: checkOut,
-        nights: String(nights),
-        guests: String(guests),
-        estimated_total: `AED ${formatPrice(total)}`,
-      }
-    );
+    const result = await submitToWeb3Forms({
+      name,
+      email,
+      phone,
+      subject: `Reservation Request — ${property.title}`,
+      message,
+      property: property.title,
+      check_in: checkIn,
+      check_out: checkOut,
+      nights: String(nights),
+      guests: String(guests),
+      estimated_total: `AED ${formatPrice(total)}`,
+    });
 
     if (result.success) {
       setStatus('success');

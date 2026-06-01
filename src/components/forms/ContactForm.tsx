@@ -1,33 +1,24 @@
 import { useState, FormEvent } from 'react';
 import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
-import { submitToWeb3Forms } from '../../lib/web3forms';
+import { submitWeb3Form } from '../../lib/web3forms';
 
 export function ContactForm() {
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [feedback, setFeedback] = useState('');
+  const [result, setResult] = useState('');
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setStatus('loading');
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setResult('Sending....');
 
-    const form = e.currentTarget;
-    const data = new FormData(form);
-
-    const result = await submitToWeb3Forms({
-      name: String(data.get('name') ?? ''),
-      email: String(data.get('email') ?? ''),
-      phone: String(data.get('phone') ?? ''),
-      subject: String(data.get('subject') ?? 'Contact'),
-      message: String(data.get('message') ?? ''),
+    const form = event.currentTarget;
+    const response = await submitWeb3Form(form, {
+      subject: `Gulf Stay Homes — ${(new FormData(form).get('subject') as string) || 'Contact'}`,
     });
 
-    if (result.success) {
-      setStatus('success');
-      setFeedback(result.message);
+    if (response.success) {
+      setResult('Form submitted successfully');
       form.reset();
     } else {
-      setStatus('error');
-      setFeedback(result.message);
+      setResult(response.message || 'Error');
     }
   }
 
@@ -35,8 +26,11 @@ export function ContactForm() {
     'w-full bg-white/5 border border-white/10 px-4 py-3 focus:border-gold outline-none transition-colors';
   const labelClass = 'text-[10px] uppercase tracking-widest text-gray-500';
 
+  const isSending = result === 'Sending....';
+  const isSuccess = result === 'Form submitted successfully';
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={onSubmit} className="space-y-6">
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <label className={labelClass} htmlFor="contact-name">
@@ -89,26 +83,29 @@ export function ContactForm() {
         />
       </div>
 
-      {status === 'success' && (
-        <div className="flex items-center gap-2 text-green-400 text-sm">
-          <CheckCircle size={18} />
-          {feedback}
-        </div>
-      )}
-      {status === 'error' && (
-        <div className="flex items-start gap-2 text-amber-400 text-sm">
-          <AlertCircle size={18} className="shrink-0 mt-0.5" />
-          {feedback}
-        </div>
+      {result && (
+        <p
+          className={`text-sm flex items-center gap-2 ${
+            isSuccess ? 'text-green-400' : isSending ? 'text-gray-400' : 'text-amber-400'
+          }`}
+        >
+          {isSuccess && <CheckCircle size={18} />}
+          {!isSuccess && !isSending && <AlertCircle size={18} />}
+          {result}
+        </p>
       )}
 
-      <button type="submit" disabled={status === 'loading'} className="w-full gold-btn flex items-center justify-center gap-2">
-        {status === 'loading' ? (
+      <button
+        type="submit"
+        disabled={isSending}
+        className="w-full gold-btn flex items-center justify-center gap-2 disabled:opacity-60"
+      >
+        {isSending ? (
           <>
             <Loader2 className="animate-spin" size={18} /> Sending...
           </>
         ) : (
-          'Send Message'
+          'Submit Form'
         )}
       </button>
     </form>

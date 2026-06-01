@@ -1,44 +1,30 @@
 import { SITE } from '../config/site';
 
-export interface Web3FormsPayload {
-  name: string;
-  email: string;
-  phone?: string;
-  subject: string;
-  message: string;
-  [key: string]: string | number | boolean | undefined;
-}
-
 export interface Web3FormsResult {
   success: boolean;
   message: string;
 }
 
-export async function submitToWeb3Forms(
-  payload: Web3FormsPayload,
-  extraFields?: Record<string, string>
-): Promise<Web3FormsResult> {
+/** Submit using FormData (recommended by Web3Forms). */
+export async function submitWeb3FormData(formData: FormData): Promise<Web3FormsResult> {
   const accessKey = SITE.web3formsAccessKey;
 
   if (!accessKey) {
     return {
       success: false,
       message:
-        'Booking form is not configured yet. Add VITE_WEB3FORMS_ACCESS_KEY to your .env file (get a free key at web3forms.com).',
+        'Form is not configured. Add VITE_WEB3FORMS_ACCESS_KEY to your .env file (see .env.example).',
     };
   }
 
-  const body = {
-    access_key: accessKey,
-    from_name: SITE.name,
-    ...payload,
-    ...extraFields,
-  };
+  formData.append('access_key', accessKey);
+  if (!formData.has('from_name')) {
+    formData.append('from_name', SITE.name);
+  }
 
   const response = await fetch('https://api.web3forms.com/submit', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify(body),
+    body: formData,
   });
 
   const data = (await response.json()) as { success?: boolean; message?: string };
@@ -52,6 +38,27 @@ export async function submitToWeb3Forms(
 
   return {
     success: true,
-    message: data.message ?? 'Your request was sent successfully. We will contact you shortly.',
+    message: 'Form submitted successfully. We will contact you shortly.',
   };
+}
+
+/** Submit an HTML form element (fields must use `name` attributes). */
+export async function submitWeb3Form(
+  form: HTMLFormElement,
+  extraFields?: Record<string, string>
+): Promise<Web3FormsResult> {
+  const formData = new FormData(form);
+  if (extraFields) {
+    Object.entries(extraFields).forEach(([key, value]) => formData.append(key, value));
+  }
+  return submitWeb3FormData(formData);
+}
+
+/** Programmatic submit for multi-step / controlled forms (e.g. booking wizard). */
+export async function submitToWeb3Forms(fields: Record<string, string>): Promise<Web3FormsResult> {
+  const formData = new FormData();
+  Object.entries(fields).forEach(([key, value]) => {
+    if (value) formData.append(key, value);
+  });
+  return submitWeb3FormData(formData);
 }

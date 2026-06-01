@@ -1,6 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
-import { submitWeb3Form } from '../../lib/web3forms';
+import { SITE } from '../../config/site';
 
 export function ContactForm() {
   const [result, setResult] = useState('');
@@ -9,16 +9,28 @@ export function ContactForm() {
     event.preventDefault();
     setResult('Sending....');
 
-    const form = event.currentTarget;
-    const response = await submitWeb3Form(form, {
-      subject: `Gulf Stay Homes — ${(new FormData(form).get('subject') as string) || 'Contact'}`,
+    const accessKey = SITE.web3formsAccessKey;
+    if (!accessKey) {
+      setResult('Error — form not configured. Add VITE_WEB3FORMS_ACCESS_KEY to .env');
+      return;
+    }
+
+    const formData = new FormData(event.currentTarget);
+    formData.append('access_key', accessKey);
+    formData.append('from_name', SITE.name);
+
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: formData,
     });
 
-    if (response.success) {
-      setResult('Form submitted successfully');
-      form.reset();
+    const data = (await response.json()) as { success?: boolean; message?: string };
+
+    if (data.success) {
+      setResult('Success!');
+      event.currentTarget.reset();
     } else {
-      setResult(response.message || 'Error');
+      setResult(data.message ?? 'Error');
     }
   }
 
@@ -27,7 +39,7 @@ export function ContactForm() {
   const labelClass = 'text-[10px] uppercase tracking-widest text-gray-500';
 
   const isSending = result === 'Sending....';
-  const isSuccess = result === 'Form submitted successfully';
+  const isSuccess = result === 'Success!';
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
@@ -60,9 +72,9 @@ export function ContactForm() {
       </div>
       <div className="space-y-2">
         <label className={labelClass} htmlFor="contact-subject">
-          Subject *
+          Subject
         </label>
-        <select id="contact-subject" name="subject" required className={`${inputClass} appearance-none`}>
+        <select id="contact-subject" name="subject" className={`${inputClass} appearance-none`}>
           <option className="bg-luxury-black">Booking Inquiry</option>
           <option className="bg-luxury-black">Property Management</option>
           <option className="bg-luxury-black">General Question</option>
@@ -83,6 +95,20 @@ export function ContactForm() {
         />
       </div>
 
+      <button
+        type="submit"
+        disabled={isSending}
+        className="w-full gold-btn flex items-center justify-center gap-2 disabled:opacity-60"
+      >
+        {isSending ? (
+          <>
+            <Loader2 className="animate-spin" size={18} /> Sending...
+          </>
+        ) : (
+          'Submit'
+        )}
+      </button>
+
       {result && (
         <p
           className={`text-sm flex items-center gap-2 ${
@@ -94,20 +120,6 @@ export function ContactForm() {
           {result}
         </p>
       )}
-
-      <button
-        type="submit"
-        disabled={isSending}
-        className="w-full gold-btn flex items-center justify-center gap-2 disabled:opacity-60"
-      >
-        {isSending ? (
-          <>
-            <Loader2 className="animate-spin" size={18} /> Sending...
-          </>
-        ) : (
-          'Submit Form'
-        )}
-      </button>
     </form>
   );
 }

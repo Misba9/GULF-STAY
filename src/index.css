@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-luxury-black text-white font-sans;
+  }
+}
+
+.glass {
+  @apply bg-white/5 backdrop-blur-lg border border-white/10;
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, #D4AF37 0%, #F8F7F2 50%, #B8860B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-btn {
+  @apply relative overflow-hidden bg-gold text-luxury-black font-bold py-4 px-8 rounded-none transition-all duration-500 hover:bg-white hover:scale-105;
+}
+
+.outline-btn {
+  @apply border border-gold text-gold py-4 px-8 rounded-none transition-all duration-500 hover:bg-gold hover:text-luxury-black;
+}
+
+/* Custom Swiper Styles */
+.swiper-pagination-bullet {
+  @apply bg-gold !important;
+}
+
+.swiper-button-next, .swiper-button-prev {
+  @apply text-gold !important;
+}
+
+/* Hero looping video background */
+.hero-video-layer {
+  @apply absolute inset-0 w-full h-full object-cover;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.hero-video-active {
+  opacity: 1;
+  z-index: 2;
+}
+
+.hero-video-idle {
+  opacity: 0;
+  z-index: 1;
+  transition: opacity 1.4s ease-in-out;
+}
+
+.hero-video-ken-burns {
+  animation: heroKenBurns 22s ease-in-out infinite alternate;
+}
+
+.hero-video-ken-burns-alt {
+  animation: heroKenBurnsAlt 26s ease-in-out infinite alternate;
+}
+
+@keyframes heroKenBurns {
+  0% {
+    transform: scale(1.08) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.18) translate(-1.5%, -1%);
+  }
+}
+
+@keyframes heroKenBurnsAlt {
+  0% {
+    transform: scale(1.1) translate(-1%, 0);
+  }
+  100% {
+    transform: scale(1.2) translate(1%, -1.5%);
+  }
+}
+
+.hero-video-vignette {
+  background: radial-gradient(ellipse at center, transparent 35%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+.hero-video-shimmer {
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(212, 175, 55, 0.04) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  animation: heroShimmer 8s ease-in-out infinite;
+}
+
+@keyframes heroShimmer {
+  0%,
+  100% {
+    background-position: 200% 0;
+  }
+  50% {
+    background-position: -200% 0;
+  }
+}
